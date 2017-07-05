@@ -41,6 +41,7 @@ import org.elasticsearch.common.xcontent.json.JsonXContent;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.search.highlight.HighlightBuilder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.wikimedia.highlighter.experimental.elasticsearch.AbstractExperimentalHighlighterIntegrationTestBase;
 
@@ -364,6 +365,7 @@ public class MiscellaneousTest extends AbstractExperimentalHighlighterIntegratio
     /**
      * There was a time when highlighting * would blow up because of _size being an empty numeric field.
      */
+    @Ignore("unstable")
     @Test
     public void highlightStar() throws IOException {
         buildIndex();
