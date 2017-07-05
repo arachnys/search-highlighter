@@ -16,6 +16,7 @@ import org.elasticsearch.common.collect.Iterators;
 import org.elasticsearch.common.util.BigArrays;
 import org.elasticsearch.index.mapper.FieldMapper;
 import org.elasticsearch.index.mapper.core.StringFieldMapper;
+import org.elasticsearch.index.mapper.internal.AnalyzerMapper;
 import org.elasticsearch.search.highlight.ExperimentalHighlighter.HighlightExecutionContext;
 import org.elasticsearch.search.highlight.SearchContextHighlight.FieldOptions;
 import org.wikimedia.highlighter.experimental.elasticsearch.BytesRefTermWeigherCache;
@@ -274,7 +275,8 @@ public class FieldWrapper {
     private HitEnum buildTokenStreamHitEnum() throws IOException {
         Analyzer analyzer = context.mapper.indexAnalyzer();
         if (analyzer == null) {
-            analyzer = context.context.analysisService().defaultIndexAnalyzer();
+            AnalyzerMapper analyzerMapper = context.context.mapperService().documentMapper(context.hitContext.hit().type()).analyzerMapper();
+            analyzer = analyzerMapper.setAnalyzer(context);
         }
         return buildTokenStreamHitEnum(analyzer);
     }
