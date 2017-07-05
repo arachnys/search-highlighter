@@ -1,0 +1,3 @@
+#!/bin/sh
+
+docker run -it --rm --name search-highlighter -v "$PWD":/usr/src/search-highlighter -w /usr/src/search-highlighter maven:3-jdk-7 mvn "$@"
