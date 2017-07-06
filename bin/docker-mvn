@@ -1,3 +1,11 @@
 #!/bin/sh
 
-docker run -it --rm --name search-highlighter -v "$PWD":/usr/src/search-highlighter -w /usr/src/search-highlighter maven:3-jdk-7 mvn "$@"
+# Only allocate tty if we detect one
+if [ -t 1 ]; then
+    DOCKER_RUN_OPTIONS="-t"
+fi
+if [ -t 0 ]; then
+    DOCKER_RUN_OPTIONS="$DOCKER_RUN_OPTIONS -i"
+fi
+
+docker run --rm $DOCKER_RUN_OPTIONS --name search-highlighter -v "$(pwd)":/usr/src/search-highlighter -w /usr/src/search-highlighter maven:3-jdk-7 mvn "$@"
