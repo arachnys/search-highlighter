@@ -10,7 +10,7 @@
 
   <groupId>org.wikimedia.search.highlighter</groupId>
   <artifactId>experimental</artifactId>
-  <version>5.5.2</version>
+  <version>5.6.2</version>
   <packaging>pom</packaging>
 
   <modules>
@@ -41,7 +41,7 @@
     <url>https://gerrit.wikimedia.org/r/#/admin/projects/search/highlighter</url>
     <connection>scm:git:https://gerrit.wikimedia.org/r/search/highlighter</connection>
     <developerConnection>scm:git:https://gerrit.wikimedia.org/r/search/highlighter</developerConnection>
-    <tag>experimental-5.5.2</tag>
+    <tag>experimental-5.6.2</tag>
   </scm>
 
   <issueManagement>
@@ -51,10 +51,10 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <elasticsearch.version>5.5.2</elasticsearch.version>
+    <elasticsearch.version>5.6.2</elasticsearch.version>
     <!-- For the Elasticsearch plugin to work this should match the version of Lucene that Elasticsearch
       uses. -->
-    <lucene.version>6.6.0</lucene.version>
+    <lucene.version>6.6.1</lucene.version>
     <randomizedtesting.version>2.5.0</randomizedtesting.version>
     <maven.compiler.target>1.8</maven.compiler.target>
     <maven.compiler.source>1.8</maven.compiler.source>
@@ -199,7 +199,7 @@
                 </jvmArgs>
               </configuration>
             </execution>
-            <!-- 
+            <!--
             	FIXME: Separate execution for ElasticsearchQueryFlattenerTest
             	This one does not use Elasticsearch integration testing framework
             	but it needs to run in a separate JVM otherwize the security manager
