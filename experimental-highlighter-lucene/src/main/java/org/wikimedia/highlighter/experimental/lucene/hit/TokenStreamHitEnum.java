@@ -18,6 +18,7 @@ import org.wikimedia.search.highlighter.experimental.hit.WeightFilteredHitEnumWr
  * that have 0 weight.  It really should be wrapped with a {@link WeightFilteredHitEnumWrapper} to filter out hits with 0 weight.
  */
 public class TokenStreamHitEnum extends AbstractHitEnum {
+    public static int DEFAULT_TOKEN_LIMIT = 10000;
     private final TokenStream tokenStream;
     private final TermWeigher<BytesRef> queryWeigher;
     private final TermWeigher<BytesRef> corpusWeigher;
@@ -27,6 +28,7 @@ public class TokenStreamHitEnum extends AbstractHitEnum {
     private final TermToBytesRefAttribute termRef;
     private final BytesRef term;
     private int position = -1;
+    private int tokenLimit = DEFAULT_TOKEN_LIMIT;
     private float queryWeight;
     private float corpusWeight;
     private int source;
@@ -38,10 +40,16 @@ public class TokenStreamHitEnum extends AbstractHitEnum {
      */
     public TokenStreamHitEnum(TokenStream tokenStream, TermWeigher<BytesRef> queryWeigher,
             TermWeigher<BytesRef> corpusWeigher, TermSourceFinder<BytesRef> sourceFinder) {
+        this(tokenStream, queryWeigher, corpusWeigher, sourceFinder, DEFAULT_TOKEN_LIMIT);
+    }
+
+    public TokenStreamHitEnum(TokenStream tokenStream, TermWeigher<BytesRef> queryWeigher,
+                              TermWeigher<BytesRef> corpusWeigher, TermSourceFinder<BytesRef> sourceFinder, int tokenLimit) {
         this.tokenStream = tokenStream;
         this.queryWeigher = queryWeigher;
         this.corpusWeigher = corpusWeigher;
         this.sourceFinder = sourceFinder;
+        this.tokenLimit = tokenLimit;
         positionIncr = tokenStream.addAttribute(PositionIncrementAttribute.class);
         offsets = tokenStream.addAttribute(OffsetAttribute.class);
         termRef = tokenStream.addAttribute(TermToBytesRefAttribute.class);
@@ -55,6 +63,9 @@ public class TokenStreamHitEnum extends AbstractHitEnum {
 
     @Override
     public boolean next() {
+        if (position + 1 >= tokenLimit) {
+            return false;
+        }
         try {
             if (!tokenStream.incrementToken()) {
                 return false;

@@ -283,6 +283,14 @@ public class FieldWrapper {
         return buildTokenStreamHitEnum(analyzer);
     }
 
+    private int getAnalyzerTokenLimit() {
+        Integer analyzerTokenLimit = (Integer) executionContext.getOption("analyzer_token_limit");
+        if (analyzerTokenLimit == null) {
+            analyzerTokenLimit = TokenStreamHitEnum.DEFAULT_TOKEN_LIMIT;
+        }
+        return analyzerTokenLimit;
+    }
+
     private HitEnum buildTokenStreamHitEnum(final Analyzer analyzer) throws IOException {
         List<String> fieldValues = getFieldValues();
         switch (fieldValues.size()) {
@@ -329,7 +337,7 @@ public class FieldWrapper {
                     "If analyzing to find hits each matched field must have a unique analyzer.", e);
         }
         this.tokenStream = tokenStream;
-        return new TokenStreamHitEnum(tokenStream, getQueryWeigher(true), getCorpusWeigher(true), weigher);
+        return new TokenStreamHitEnum(tokenStream, getQueryWeigher(true), getCorpusWeigher(true), weigher, getAnalyzerTokenLimit());
     }
 
     private TermWeigher<BytesRef> getQueryWeigher(boolean mightWeighTermsMultipleTimes) {

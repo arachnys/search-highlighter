@@ -517,4 +517,20 @@ public class OptionsTest extends AbstractExperimentalHighlighterIntegrationTestB
         }
     }
 
+    @Test
+    public void truncateValues() throws IOException {
+        buildIndex(false, true, 1);
+        indexTestData("one two");
+
+        Map<String, Object> options = new HashMap<String, Object>();
+        options.put("analyzer_token_limit", 1);
+        options.put("hit_source", "analyze");
+
+        SearchRequestBuilder search = testSearch(termQuery("test", "two"))
+                .addHighlightedField(new HighlightBuilder.Field("test").noMatchSize(20).options(options));
+
+        SearchResponse response = search.get();
+        assertHighlight(response, 0, "test", 0, equalTo("one two"));
+    }
+
 }
